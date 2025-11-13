@@ -7,6 +7,15 @@ const generateSuggestionBtn = document.getElementById('generateSuggestion');
 const suggestionResult = document.getElementById('suggestionResult');
 const postToLinkedInBtn = document.getElementById('postToLinkedIn');
 
+// Freepik Search Elements
+const searchFreepikBtn = document.getElementById('searchFreepik');
+const freepikSearchContainer = document.getElementById('freepikSearchContainer');
+const freepikSearchQuery = document.getElementById('freepikSearchQuery');
+const executeFreepikSearch = document.getElementById('executeFreepikSearch');
+const freepikResults = document.getElementById('freepikResults');
+const freepikApiKeyInput = document.getElementById('freepikApiKey');
+const saveApiKeyBtn = document.getElementById('saveApiKey');
+
 // Company Profile Elements
 const companyNameInput = document.getElementById('companyName');
 const industryInput = document.getElementById('industry');
@@ -108,7 +117,99 @@ const suggestions = [
     "Create a post highlighting a common challenge and how to overcome it."
 ];
 
+// Freepik Search Functions
+async function searchFreepikImages(query) {
+    try {
+        // Show loading state
+        freepikResults.innerHTML = '<div class="col-span-2 text-center py-4">Searching for images...</div>';
+        
+        // In a real implementation, you would call the Freepik API here
+        // For now, we'll simulate a search with sample data
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // Sample image data (replace with actual API call)
+        const sampleImages = [
+            { id: 1, url: 'https://img.freepik.com/free-vector/abstract-background-with-a-3d-pattern_52683-44643.jpg', title: 'Abstract Background' },
+            { id: 2, url: 'https://img.freepik.com/free-vector/gradient-network-connection-background_23-2148865392.jpg', title: 'Network Connection' },
+            { id: 3, url: 'https://img.freepik.com/free-vector/watercolor-stains-abstract-background_23-2149107181.jpg', title: 'Watercolor Background' },
+            { id: 4, url: 'https://img.freepik.com/free-vector/gradient-abstract-background_23-2149105899.jpg', title: 'Gradient Abstract' },
+        ];
+        
+        // Filter based on query if provided
+        const filteredImages = query 
+            ? sampleImages.filter(img => 
+                img.title.toLowerCase().includes(query.toLowerCase()))
+            : sampleImages;
+        
+        // Display results
+        if (filteredImages.length > 0) {
+            freepikResults.innerHTML = filteredImages.map(img => `
+                <div class="relative group cursor-pointer" data-img-url="${img.url}">
+                    <img src="${img.url}" alt="${img.title}" class="w-full h-24 object-cover rounded border border-gray-200 hover:border-blue-500 transition-all">
+                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
+                        <span class="text-white text-sm font-medium bg-black bg-opacity-50 px-2 py-1 rounded">Select</span>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Add click event to images
+            document.querySelectorAll('#freepikResults [data-img-url]').forEach(el => {
+                el.addEventListener('click', () => {
+                    const imgUrl = el.getAttribute('data-img-url');
+                    adPreview.innerHTML = `
+                        <p>${adContent.value || 'Your ad preview'}</p>
+                        <img src="${imgUrl}" alt="Ad preview" class="mt-2 rounded w-full">
+                    `;
+                    
+                    // Hide search container after selection
+                    freepikSearchContainer.classList.add('hidden');
+                    
+                    // Add activity
+                    analyticsData.activities.unshift(`Freepik image selected for ad`);
+                    if (analyticsData.activities.length > 5) analyticsData.activities.pop();
+                    updateAnalyticsUI();
+                });
+            });
+        } else {
+            freepikResults.innerHTML = '<div class="col-span-2 text-center py-4">No images found. Try a different search term.</div>';
+        }
+    } catch (error) {
+        console.error('Error searching Freepik:', error);
+        freepikResults.innerHTML = '<div class="col-span-2 text-center py-4 text-red-500">Error loading images. Please try again.</div>';
+    }
+}
+
 // Event Listeners
+// Toggle Freepik search container
+searchFreepikBtn.addEventListener('click', () => {
+    freepikSearchContainer.classList.toggle('hidden');
+    if (!freepikSearchContainer.classList.contains('hidden')) {
+        freepikSearchQuery.focus();
+    }
+});
+
+// Execute Freepik search
+executeFreepikSearch.addEventListener('click', () => {
+    const query = freepikSearchQuery.value.trim();
+    if (query) {
+        searchFreepikImages(query);
+    } else {
+        searchFreepikImages();
+    }
+});
+
+// Handle Enter key in search input
+freepikSearchQuery.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        const query = freepikSearchQuery.value.trim();
+        if (query) {
+            searchFreepikImages(query);
+        } else {
+            searchFreepikImages();
+        }
+    }
+});
+
 imageUpload.addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (file) {
@@ -514,6 +615,42 @@ function init() {
         renderPosts('all');
     }
 }
+
+// API Key Management
+function loadApiKey() {
+    const savedKey = localStorage.getItem('freepikApiKey');
+    if (savedKey) {
+        freepikApiKeyInput.value = savedKey;
+    }
+}
+
+function saveApiKey() {
+    const apiKey = freepikApiKeyInput.value.trim();
+    if (apiKey) {
+        localStorage.setItem('freepikApiKey', apiKey);
+        // Show success message
+        const successMsg = document.createElement('div');
+        successMsg.className = 'mt-2 text-sm text-green-600';
+        successMsg.textContent = 'API key saved successfully!';
+        saveApiKeyBtn.parentNode.insertBefore(successMsg, saveApiKeyBtn.nextSibling);
+        
+        // Remove success message after 3 seconds
+        setTimeout(() => {
+            successMsg.remove();
+        }, 3000);
+    }
+}
+
+// Event Listeners
+saveApiKeyBtn.addEventListener('click', saveApiKey);
+freepikApiKeyInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        saveApiKey();
+    }
+});
+
+// Load saved API key when the app starts
+loadApiKey();
 
 // Start the app
 init();

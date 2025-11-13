@@ -62,8 +62,24 @@
                     <textarea id="adContent" class="w-full p-2 border rounded" rows="4" placeholder="Enter your ad content here..."></textarea>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-gray-700 mb-2">Upload Image</label>
-                    <input type="file" id="imageUpload" accept="image/*" class="w-full">
+                    <label class="block text-gray-700 mb-2">Upload Image or Search Freepik</label>
+                    <div class="flex gap-2 mb-2">
+                        <input type="file" id="imageUpload" accept="image/*" class="flex-1">
+                        <button id="searchFreepik" class="bg-rp-rose text-white px-4 py-2 rounded hover:bg-opacity-90 transition-all">
+                            Search Freepik
+                        </button>
+                    </div>
+                    <div id="freepikSearchContainer" class="hidden">
+                        <div class="flex gap-2 mb-2">
+                            <input type="text" id="freepikSearchQuery" placeholder="Search for images..." class="flex-1 p-2 border rounded">
+                            <button id="executeFreepikSearch" class="bg-rp-pine text-white px-4 py-2 rounded hover:bg-opacity-90 transition-all">
+                                Search
+                            </button>
+                        </div>
+                        <div id="freepikResults" class="grid grid-cols-2 gap-2 max-h-60 overflow-y-auto p-2 border rounded bg-gray-50">
+                            <!-- Search results will be populated here -->
+                        </div>
+                    </div>
                 </div>
                 <div class="mb-4">
                     <label class="block text-gray-700 mb-2">Preview</label>
@@ -139,6 +155,28 @@
                 <!-- Posts will be dynamically added here -->
                 <p id="noPostsMessage" class="text-gray-500 text-center py-8">No posts yet. Create your first ad to see it here!</p>
                 <div id="postsList" class="space-y-4"></div>
+            </div>
+        </div>
+
+        <!-- API Key Settings -->
+        <div class="mt-12 bg-rp-surface rounded-lg shadow-md p-6 border border-rp-overlay">
+            <h2 class="text-2xl font-semibold mb-6 text-rp-text">API Settings</h2>
+            <div class="space-y-4">
+                <div>
+                    <label for="freepikApiKey" class="block text-rp-subtle mb-2 font-medium">Freepik API Key</label>
+                    <div class="flex gap-2">
+                        <input type="password" 
+                               id="freepikApiKey" 
+                               placeholder="Enter your Freepik API key" 
+                               class="flex-1 p-2 border border-rp-overlay rounded-lg bg-rp-base text-rp-text focus:ring-2 focus:ring-rp-pine focus:border-transparent transition-all">
+                        <button id="saveApiKey" class="bg-rp-pine text-white px-4 py-2 rounded-lg hover:bg-opacity-90 transition-all">
+                            Save
+                        </button>
+                    </div>
+                    <p class="text-xs text-rp-subtle mt-1">
+                        Get your API key from <a href="https://freepik.com/developers" target="_blank" class="text-rp-foam hover:underline">Freepik Developers</a>
+                    </p>
+                </div>
             </div>
         </div>
     </div>

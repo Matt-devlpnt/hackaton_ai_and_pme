@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkedIn Ads Generator</title>
+    <link rel="stylesheet" href="src/styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen">
+    <div class="container mx-auto px-4 py-8 max-w-7xl">
+        <header class="text-center mb-12">
+            <h1 class="text-5xl font-bold text-rp-pine mb-4">LinkedIn Ads Generator</h1>
+            <p class="text-rp-subtle text-lg">Create, analyze, and post amazing LinkedIn ads with AI assistance</p>
+        </header>
+
+        <!-- Company Profile Section Moved to Top -->
+        <div class="bg-rp-surface rounded-lg shadow-md p-6 mb-8 border border-rp-overlay">
+            <h2 class="text-2xl font-semibold mb-6 text-rp-text">Company Profile</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <div class="mb-4">
+                        <label class="block text-rp-subtle mb-2 font-medium">Company Name</label>
+                        <input type="text" id="companyName" class="w-full p-3 border border-rp-overlay rounded-lg bg-rp-base text-rp-text focus:ring-2 focus:ring-rp-pine focus:border-transparent transition-all" placeholder="Enter company name">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-rp-subtle mb-2 font-medium">Industry</label>
+                        <input type="text" id="industry" class="w-full p-3 border border-rp-overlay rounded-lg bg-rp-base text-rp-text focus:ring-2 focus:ring-rp-pine focus:border-transparent transition-all" placeholder="e.g., Technology, Marketing">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-rp-subtle mb-2 font-medium">Website</label>
+                        <input type="url" id="website" class="w-full p-3 border border-rp-overlay rounded-lg bg-rp-base text-rp-text focus:ring-2 focus:ring-rp-pine focus:border-transparent transition-all" placeholder="https://example.com">
+                    </div>
+                </div>
+                <div>
+                    <div class="mb-4">
+                        <label class="block text-rp-subtle mb-2 font-medium">Specialties (comma-separated)</label>
+                        <textarea id="specialties" class="w-full p-3 border border-rp-overlay rounded-lg bg-rp-base text-rp-text h-32 focus:ring-2 focus:ring-rp-pine focus:border-transparent transition-all" placeholder="e.g., Web Development, Digital Marketing, AI Solutions"></textarea>
+                    </div>
+                    <div class="flex flex-wrap gap-3 mt-4">
+                        <button id="saveProfile" class="bg-rp-pine text-white px-4 py-2 rounded-lg hover:bg-opacity-90 transition-all font-medium">
+                            Save Profile
+                        </button>
+                        <button id="exportProfile" class="bg-rp-foam text-white px-4 py-2 rounded-lg hover:bg-opacity-90 transition-all font-medium">
+                            Export Profile
+                        </button>
+                        <button id="importProfile" class="bg-rp-iris text-white px-4 py-2 rounded-lg hover:bg-opacity-90 transition-all font-medium">
+                            Import Profile
+                        </button>
+                        <input type="file" id="importFile" accept=".json" class="hidden">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Ad Creation Section -->
+            <div class="bg-rp-surface rounded-lg shadow-md p-6 border border-rp-overlay">
+                <h2 class="text-2xl font-semibold mb-6 text-rp-text">Create New Ad</h2>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Ad Content</label>
+                    <textarea id="adContent" class="w-full p-2 border rounded" rows="4" placeholder="Enter your ad content here..."></textarea>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Upload Image</label>
+                    <input type="file" id="imageUpload" accept="image/*" class="w-full">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Preview</label>
+                    <div id="adPreview" class="border p-4 rounded bg-gray-50 min-h-32">
+                        <p class="text-gray-500">Your ad preview will appear here</p>
+                    </div>
+                </div>
+                <button id="generateAd" class="w-full bg-rp-pine text-white py-2 rounded hover:bg-opacity-90 transition-all">
+                    Generate Ad with AI
+                </button>
+            </div>
+
+            <!-- Ad Preview Section -->
+            <div class="bg-rp-surface rounded-lg shadow-md p-6 border border-rp-overlay">
+                <h2 class="text-2xl font-semibold mb-6 text-rp-text">Ad Preview</h2>
+                <div class="mb-4">
+                    <h3 class="font-medium">Performance Overview</h3>
+                    <div class="grid grid-cols-2 gap-4 mt-2">
+                        <div class="bg-blue-50 p-3 rounded">
+                            <p class="text-2xl font-bold text-blue-700" id="impressions">0</p>
+                            <p class="text-sm text-gray-600">Impressions</p>
+                        </div>
+                        <div class="bg-green-50 p-3 rounded">
+                            <p class="text-2xl font-bold text-green-700" id="clicks">0</p>
+                            <p class="text-sm text-gray-600">Clicks</p>
+                        </div>
+                        <div class="bg-purple-50 p-3 rounded">
+                            <p class="text-2xl font-bold text-purple-700" id="engagement">0%</p>
+                            <p class="text-sm text-gray-600">Engagement</p>
+                        </div>
+                        <div class="bg-yellow-50 p-3 rounded">
+                            <p class="text-2xl font-bold text-yellow-700" id="ctr">0%</p>
+                            <p class="text-sm text-gray-600">CTR</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Suggestions -->
+            <div class="bg-rp-surface rounded-lg shadow-md p-6 border border-rp-overlay">
+                <h2 class="text-2xl font-semibold mb-6 text-rp-text">AI Post Suggestions</h2>
+                <div class="mb-4">
+                    <p class="text-rp-subtle mb-2">Get AI-powered suggestions for your next post:</p>
+                    <button id="generateSuggestion" class="w-full bg-rp-pine text-white py-2 rounded hover:bg-opacity-90 transition-all mb-4">
+                        Generate Suggestion
+                    </button>
+                    <div id="suggestionResult" class="bg-gray-50 p-4 rounded border border-gray-200 min-h-40">
+                        <p class="text-gray-500">Click the button above to get a suggestion</p>
+                    </div>
+                </div>
+                <div class="mt-6">
+                    <h3 class="font-medium mb-2">Post to LinkedIn</h3>
+                    <button id="postToLinkedIn" class="w-full bg-rp-iris text-white py-2 rounded hover:bg-opacity-90 transition-all">
+                        Post to LinkedIn
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Previous Posts Section -->
+        <div class="mt-12 bg-rp-surface rounded-lg shadow-md p-6 border border-rp-overlay">
+            <h2 class="text-2xl font-semibold mb-6 text-rp-text">Previous Posts</h2>
+            <div class="border-b border-rp-overlay pb-2">
+                <div class="flex flex-wrap gap-2">
+                    <button id="allPostsTab" class="px-4 py-2 font-medium rounded-lg bg-rp-pine text-rp-base">All Posts</button>
+                    <button id="scheduledTab" class="px-4 py-2 text-rp-subtle hover:bg-rp-overlay rounded-lg transition-colors">Scheduled</button>
+                    <button id="publishedTab" class="px-4 py-2 text-rp-subtle hover:bg-rp-overlay rounded-lg transition-colors">Published</button>
+                    <button id="draftsTab" class="px-4 py-2 text-rp-subtle hover:bg-rp-overlay rounded-lg transition-colors">Drafts</button>
+                </div>
+            </div>
+            <div id="postsContainer" class="mt-4">
+                <!-- Posts will be dynamically added here -->
+                <p id="noPostsMessage" class="text-gray-500 text-center py-8">No posts yet. Create your first ad to see it here!</p>
+                <div id="postsList" class="space-y-4"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="src/app.js"></script>
+    <script>
+        // Initialize Tailwind with custom colors
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'rp-base': '#faf4ed',
+                        'rp-surface': '#fffaf3',
+                        'rp-overlay': '#f2e9e1',
+                        'rp-muted': '#9893a5',
+                        'rp-subtle': '#797593',
+                        'rp-text': '#575279',
+                        'rp-love': '#b4637a',
+                        'rp-gold': '#ea9d34',
+                        'rp-rose': '#d7827e',
+                        'rp-pine': '#286983',
+                        'rp-foam': '#56949f',
+                        'rp-iris': '#907aa9',
+                    },
+                    fontFamily: {
+                        sans: ['Barlow', 'system-ui', 'sans-serif'],
+                    },
+                },
+            },
+        };
+    </script>
+</body>
+</html>
